@@ -90,10 +90,11 @@ class CountdownWidget : GlanceAppWidget() {
                 size.height.value / scale.coerceAtLeast(1f) in 90f..<150f
             // Read one instant per composition, including state invalidation on clock ticks.
             val now = Instant.now()
+            val dayDetail = event?.let { countdownDayDetail(it.begin, it.allDay, now, ZoneId.systemDefault()) }
             val detail = if (event != null && selection?.showHours == true)
                 countdownHours(event.begin, event.allDay, now, ZoneId.systemDefault()) else null
             val description = if (detail != null) "${event!!.title}, ${detail.description}, ${event.dateLabel()}"
-                else if (event != null) "${event.title}, ${fullDays(countdownDays(event.begin, event.allDay, LocalDate.now(), ZoneId.systemDefault()))}, ${event.dateLabel()}"
+                else if (event != null) "${event.title}, ${dayDetail!!.description}, ${event.dateLabel()}"
                 else "$status. Tap to select an event."
             val modifier = GlanceModifier.fillMaxSize().background(ColorProvider(Color(0xFFFAFAFA), Color(0xFF222222)))
                 .cornerRadius(16.dp).padding(if (compact || shortWidget) 6.dp else 12.dp)
@@ -103,7 +104,8 @@ class CountdownWidget : GlanceAppWidget() {
                     Label(if (compact && !access) "Allow\ncalendar" else status.orEmpty(), 13, 3)
                 }
             } else {
-                val days = countdownDays(event.begin, event.allDay, LocalDate.now(), ZoneId.systemDefault())
+                val day = dayDetail!!
+                val days = day.days
                 if (detail != null) {
                     val height = size.height.value / scale.coerceAtLeast(1f)
                     val width = size.width.value / scale.coerceAtLeast(1f)
@@ -127,7 +129,7 @@ class CountdownWidget : GlanceAppWidget() {
                         val availableHeight = (size.height.value - 12) / scale.coerceAtLeast(1f)
                         val titleLines = if (availableHeight >= 90) 2 else 1
                         Label(event.title, 11, titleLines)
-                        val text = compactDays(days)
+                        val text = day.compact
                         val available = (size.width.value - 12) / scale.coerceAtLeast(1f)
                         val heightLimit = ((availableHeight - 14 * titleLines) / 1.3f).toInt().coerceIn(10, 28)
                         val font = (available / (text.length.coerceAtLeast(2) * 0.65f)).toInt().coerceIn(10, heightLimit)
@@ -135,9 +137,8 @@ class CountdownWidget : GlanceAppWidget() {
                     }
                     WidgetLayout.WIDE -> Row(modifier, verticalAlignment = Alignment.CenterVertically) {
                         Column(GlanceModifier.width(80.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                            Label(if (days == 0L) "Today" else abs(days).toString(), if (abs(days) > 9999) 22 else 30, 1, true)
-                            if (days != 0L) Label(if (days > 0) "${if (days == 1L) "day" else "days"} left"
-                                else "${if (days == -1L) "day" else "days"} ago", 12, 1)
+                            Label(day.value, if (abs(days) > 9999) 22 else 30, 1, true)
+                            if (day.direction.isNotEmpty()) Label(day.direction, 12, 1)
                         }
                         Spacer(GlanceModifier.width(14.dp))
                         Column(GlanceModifier.defaultWeight()) {
@@ -151,10 +152,9 @@ class CountdownWidget : GlanceAppWidget() {
                         Label(event.title, if (tall || shortDate) 13 else 16,
                             if (tall) 3 else if (size.height.value / scale < 140) 1 else 2)
                         Spacer(GlanceModifier.height(if (shortDate) 2.dp else 6.dp))
-                        Label(if (days == 0L) "Today" else abs(days).toString(),
+                        Label(day.value,
                             if (shortDate) 18 else if (tall || abs(days) > 9999) 26 else if (size.height.value / scale < 125) 30 else 36, 1, true)
-                        if (days != 0L) Label(if (days > 0) "${if (days == 1L) "day" else "days"} left"
-                            else "${if (days == -1L) "day" else "days"} ago", if (shortDate) 11 else 13, 1)
+                        if (day.direction.isNotEmpty()) Label(day.direction, if (shortDate) 11 else 13, 1)
                         if (selection?.showDate == true && (shortDate || size.height.value / scale >= 150)) {
                             Spacer(GlanceModifier.height(if (shortDate) 2.dp else 8.dp))
                             Label(event.dateLabel(), if (shortDate) 10 else 12, if (tall) 2 else 1)

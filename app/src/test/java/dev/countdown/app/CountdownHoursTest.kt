@@ -19,6 +19,14 @@ class CountdownHoursTest {
         assertEquals("1d 0h", at(24 * 3600).value)
         assertEquals("23h", at(24 * 3600 - 1).value)
     }
+    @Test fun pastEventsAlwaysUseAgoIncludingSubHourAndMultipleDays() {
+        for (seconds in listOf(-1L, -3599L, -3600L, -86400L, -190800L)) {
+            assertEquals("ago", at(seconds).direction)
+            assertTrue(at(seconds).description.endsWith(" ago"))
+        }
+        assertEquals("", at(0).direction)
+        assertEquals("left", at(1).direction)
+    }
     @Test fun handlesStartAndUnderHourWithoutNegativeZero() {
         assertEquals("Now", at(0).value)
         assertEquals("<1h", at(1).value)

@@ -38,8 +38,8 @@ class CountdownApplication : Application() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (!(getSystemService(POWER_SERVICE) as PowerManager).isInteractive) return
                 scope.launch {
-                    val store = WidgetStore(this@CountdownApplication)
-                    if (WidgetStore.ids(this@CountdownApplication).any { store.read(it)?.showHours == true })
+                    // Days-only timed events also change from Today to ago at their start.
+                    if (WidgetStore.ids(this@CountdownApplication).isNotEmpty())
                         refreshWidgets(this@CountdownApplication)
                 }
             }
