@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Countdown</string>
+    <string name="widget_description">Days until a calendar event</string>
+</resources>
