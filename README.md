@@ -32,8 +32,6 @@ No account, ads, analytics, or app-operated cloud service. Calendar sync is hand
 4. Tap **Select event**, choose an event, review display options, and press **Save**.
 5. To change it later, use your launcher's **Configure/Settings** action or select the widget in the app. **Cancel** discards unsaved changes.
 
-The public app ID is `io.github.tqnl.countdown`. Earlier private development builds used `dev.countdown.app`; their settings and widgets do not migrate. You can uninstall the old development app after installing this release.
-
 In Smart Launcher, keep your finger down from the initial long press while dragging between pages, wait at the edge for the page to switch, then drop in free space. Cell dimensions and minimum sizes depend on the launcher. A small widget may shorten the title or omit the date.
 
 ## Counting and refresh

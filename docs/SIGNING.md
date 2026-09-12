@@ -16,4 +16,4 @@ apksigner verify --verbose --print-certs countdown-0.3.0.apk
 
 Compare its file hash with the release's SHA256SUMS as a separate integrity check. A valid signature identifies the signing key and detects changes after signing; it is not a store review or a guarantee that the app has no bugs.
 
-Source-built APKs signed with your own key cannot update an official installation directly. Uninstalling first clears the app's local settings and widgets. The public release's application ID is io.github.tqnl.countdown, distinct from the earlier private debug builds.
+Source-built APKs signed with your own key cannot update an official installation directly. Uninstalling first clears the app's local settings and widgets. The application ID is `io.github.tqnl.countdown`.
