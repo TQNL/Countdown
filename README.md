@@ -2,7 +2,7 @@
 
 A small Android home-screen widget that counts down to an event in your calendar. Android 12 or newer. One widget type, with separate settings for each instance.
 
-[Download the signed APK](https://github.com/TQNL/Countdown/releases/tag/v0.3.0) Â· [Privacy](PRIVACY.md) Â· [GNU GPL v3 or later](LICENSE)
+[Download the signed APK](https://github.com/TQNL/Countdown/releases/tag/v0.3.0) | [Privacy](PRIVACY.md) | [GNU GPL v3 or later](LICENSE)
 
 ## Why this exists
 
