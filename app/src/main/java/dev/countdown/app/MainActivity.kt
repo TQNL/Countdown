@@ -250,6 +250,15 @@ class MainActivity : ComponentActivity() {
             currentEvent = withContext(Dispatchers.IO) {
                 runCatching { selection?.let { CalendarRepository(this@MainActivity).resolve(it) } }.getOrNull()
             }
+            // A newly picked event may be edited before the widget settings are saved.
+            val draft = draftEvent
+            if (draft != null) {
+                val updated = withContext(Dispatchers.IO) {
+                    runCatching { CalendarRepository(this@MainActivity).resolve(
+                        WidgetSelection(draft.id, draft.begin, draft.recurring, showDate, showHours)) }.getOrNull()
+                }
+                if (draftEvent == draft && updated != null) draftEvent = updated
+            }
             currentLoading = false
         }
         var calendars by remember { mutableStateOf<List<DeviceCalendar>>(emptyList()) }
@@ -259,6 +268,7 @@ class MainActivity : ComponentActivity() {
         var menu by remember { mutableStateOf(false) }
         var retry by remember { mutableIntStateOf(0) }
         var calendarLaunchFailed by remember { mutableStateOf(false) }
+        var eventLaunchFailed by remember { mutableStateOf(false) }
         LaunchedEffect(search, calendarId, years, refresh, retry) {
             loading = true
             error = null
@@ -294,21 +304,34 @@ class MainActivity : ComponentActivity() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 Text(widgetName, style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
-                OutlinedCard(onClick = { choosingEvent = true }, enabled = !saving,
+                val shownEvent = draftEvent ?: currentEvent
+                val openEvent = {
+                    eventLaunchFailed = shownEvent?.let { !openCalendarEvent(it) } ?: false
+                }
+                OutlinedCard(onClick = {
+                    if (shownEvent == null) choosingEvent = true else openEvent()
+                }, enabled = !saving && !currentLoading,
                     modifier = Modifier.fillMaxWidth()) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text("Event", style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        val shownEvent = draftEvent ?: currentEvent
                         Text(shownEvent?.title ?: if (currentLoading) "Loading…" else if (selection == null)
                             "Select event" else "Event unavailable", style = MaterialTheme.typography.titleMedium)
                         shownEvent?.let { Text("${it.dateLabel()} · ${it.timeLabel()} · ${it.calendarName}",
                             style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) }
-                        Text(if (shownEvent == null) "Select event" else "Change event",
-                            modifier = Modifier.padding(top = 8.dp), style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.primary)
+                        Row(Modifier.fillMaxWidth().padding(top = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            TextButton(enabled = !saving, onClick = {
+                                eventLaunchFailed = false
+                                choosingEvent = true
+                            }) { Text(if (shownEvent == null) "Select event" else "Change event") }
+                            if (shownEvent != null) TextButton(enabled = !saving && !currentLoading,
+                                onClick = { openEvent() }) { Text("Open in calendar") }
+                        }
                     }
                 }
+                if (eventLaunchFailed) Text("Could not open this event in a calendar app.",
+                    color = MaterialTheme.colorScheme.error)
                 Text("Display", style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
                 OutlinedCard(Modifier.fillMaxWidth()) {

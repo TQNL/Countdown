@@ -2,7 +2,7 @@
 
 A small Android home-screen widget that counts down to an event in your calendar. Android 12 or newer. One widget type, with separate settings for each instance.
 
-[Download the signed APK](https://github.com/TQNL/Countdown/releases/tag/v0.3.1) | [Privacy](PRIVACY.md) | [GNU GPL v3 or later](LICENSE)
+[Download the signed APK](https://github.com/TQNL/Countdown/releases/tag/v0.3.2) | [Privacy](PRIVACY.md) | [GNU GPL v3 or later](LICENSE)
 
 ## Why this exists
 
@@ -18,6 +18,7 @@ The idea was simple: pick a calendar event, put its countdown on the home screen
 - Resize from 1x1 to larger shapes; follow the phone's light or dark theme.
 - Name widget instances and configure each one separately.
 - Tap the widget to open its event in a calendar app.
+- In widget settings, tap the event card or **Open in calendar** to open that exact event in your calendar app. In Google Calendar, tap the pencil on the event page to edit it. **Change event** selects a different event for the widget.
 - Use **Open calendar** in the picker to browse or edit events, then return to select one in Countdown.
 
 No account, ads, analytics, or app-operated cloud service. Calendar sync is handled by your existing calendar app. Apps that keep events in a private database are not supported.
@@ -26,7 +27,7 @@ No account, ads, analytics, or app-operated cloud service. Calendar sync is hand
 
 ## Install and use
 
-1. Download `countdown-0.3.1.apk` from [Releases](https://github.com/TQNL/Countdown/releases). Android may ask you to allow installation from the browser or file manager you use.
+1. Download `countdown-0.3.2.apk` from [Releases](https://github.com/TQNL/Countdown/releases). Android may ask you to allow installation from the browser or file manager you use.
 2. Open Countdown and allow calendar access.
 3. Add **Countdown** using your launcher's widget picker or the app's **Add widget** button.
 4. Tap **Select event**, choose an event, review display options, and press **Save**.
@@ -56,7 +57,7 @@ For your own signed release, set `COUNTDOWN_KEYSTORE` to your keystore's absolut
 
 ## Status and testing
 
-0.3.1 is an early public release. The signed 0.3.1 release was installed and checked in both countdown modes on Pixel 9 Pro with Smart Launcher. Earlier testing covered a Samsung Galaxy A12 (Android 12 / One UI Core 4.1) and Pixel 9 Pro (Android 17 / Smart Launcher 6.6). Build, lint, and 23 unit tests passed before publishing. Long-idle battery behavior and every launcher/font configuration have not been exhaustively tested. Please report reproducible issues with your Android and launcher versions, without private calendar information.
+0.3.2 is an early public release. The signed release was checked on Pixel 9 Pro with Smart Launcher, including opening the selected calendar event from both settings actions. Countdown modes were checked in 0.3.1. Earlier testing covered a Samsung Galaxy A12 (Android 12 / One UI Core 4.1) and Pixel 9 Pro (Android 17 / Smart Launcher 6.6). Build, lint, and 23 unit tests passed before publishing. Long-idle battery behavior and every launcher/font configuration have not been exhaustively tested. Please report reproducible issues with your Android and launcher versions, without private calendar information.
 
 ## AI disclosure
 

@@ -4,11 +4,8 @@
 package dev.countdown.app
 
 import android.appwidget.AppWidgetManager
-import android.content.ActivityNotFoundException
-import android.content.ContentUris
 import android.content.Intent
 import android.os.Bundle
-import android.provider.CalendarContract
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -28,11 +25,7 @@ class EventActivity : ComponentActivity() {
             }
             val setup = Intent(this@EventActivity, MainActivity::class.java).putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
             if (event == null) startActivity(setup)
-            else try {
-                startActivity(Intent(Intent.ACTION_VIEW, ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, event.id))
-                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.begin)
-                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.end))
-            } catch (_: ActivityNotFoundException) { startActivity(setup) }
+            else if (!openCalendarEvent(event)) startActivity(setup)
             finish()
         }
     }
